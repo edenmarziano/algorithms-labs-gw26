@@ -84,9 +84,9 @@ occurs. Record where $j$ stops and whether you add $s$ to the results.
 | Shift `s` | Text indices checked | Final `j` | Append `s`? |
 |---|---|---|---|
 | 1 | `1` | 0 | No |
-| 2 | TODO | TODO | TODO |
-| 4 | TODO | TODO | TODO |
-| 5 | TODO | TODO | TODO |
+| 2 | '2,3'| 1 | No |
+| 4 | 4,5,6 | 3 | Yes |
+| 5 | 5 | 0 | no |
 
 ### 1.2 Implementation
 
@@ -174,9 +174,27 @@ At shift `6`, the hash is `7`; all five characters match, so record `6`.
 1. **Move from shift `6` to `7`.** Which digit leaves the window, and which
    digit enters? Substitute them into the rolling-hash formula and calculate
    the new hash.
+
+   window : "31415"
+   outgoing digit: T[6] = 3
+   incoming digit: T[11] = 2
+   current hash: 7 
+
+   t' = (10(7-3(3)) + 2)mod 13
+
 2. **Check shift `12`.** Its hash is `7`, so compare the characters. List the
    text and pattern indices checked before stopping. Is this a match or a
    spurious hit?
+
+   window: "67399"
+   pattern: "31415"
+   hash of window: 7 
+   pattern hash: 7
+
+   text indices checked: 12
+   pattern indices checked: 0
+   match? no
+   type: spurious hit 
 
 ### 2.2 Implementation
 
@@ -203,12 +221,16 @@ hash comparisons and character checks.
 
 | Case | Build hashes | Search | Total |
 |---|---|---|---|
-| Best | TODO | TODO | TODO |
-| Worst | TODO | TODO | TODO |
+| Best | theta(m) | theta(n - m + 1) | theta(n + m) |
+| Worst | theta(m) | theta((n - m + 1)m) | theta(m + (n - m + 1)m) |
 
 For each case, explain in one sentence how many windows need character checks
 and how many characters are checked in each one.
 
+best case: every window has a different hash from the pattern, so no character by character verification is needed. The algorithm builds hashes in theta(m) time and examines theta(n - m + 1) windows
+
+worst case: the text and the pattern consist of entirely a characters, every window hash matches, and each verification compares all m characters. There are n - m + 1 windows 
+ 
 ### Connection: Searching for several patterns
 
 You can also search for several patterns of the same length. Hash each
@@ -301,11 +323,15 @@ The first row is worked: `P[2] == P[4]`, so `k` increases to `3`.
 | Index `j` | Starting `k` | Fallbacks | `pi[j]` |
 |---|---|---|---|
 | 4 | 2 | none | 3 |
-| 5 | 3 | TODO | TODO |
-| 6 | 0 | TODO | TODO |
+| 5 | 3 | 3 -> 1 -> 0 | 0 |
+| 6 | 0 | none | 1 |
 
 Now trace the matcher at `i = 8`, starting with `q = 6`. Which pattern index
 is compared with `T[8]`? What shift is recorded, and what is `q` afterward?
+
+compare P[6] = a with T[8] = a, they match so q increases to 7 
+since q == m, record i - m + 1 = 8 - 7 + 1 = 2
+q = pi[m - 1] = 1
 
 ### 3.2 Implementation
 
@@ -330,12 +356,13 @@ Give tight bounds in terms of $n$ and $m$.
 
 | Case | Build `pi` | Search | Total |
 |---|---|---|---|
-| Best | TODO | TODO | TODO |
-| Worst | TODO | TODO | TODO |
+| Best | theta(m) | theta(n) | theta(n + m) |
+| Worst | theta(m) | theta(n) | theta(n + m) |
 
 Explain the worst-case bound in a few lines. Across the whole scan, how often
 can `q` increase? How does that limit the number of fallbacks? Use the same
 reasoning for `k` when building `pi`.
+
 
 ---
 
