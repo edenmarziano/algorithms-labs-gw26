@@ -24,8 +24,8 @@ This lab covers the graph representations and traversals from lecture:
 | `graph_traversals.py` | Complete `bfs`, `reconstruct_path`, and `dfs` |
 | `lab_checks.py` | Provided automated checks; do not edit |
 
-- [ ] Part 2: Trace BFS, implement it, and reconstruct a path.
-- [ ] Part 3: Trace and implement DFS, then compare traversal costs.
+- [X] Part 2: Trace BFS, implement it, and reconstruct a path.
+- [X] Part 3: Trace and implement DFS, then compare traversal costs.
 
 ---
 
@@ -123,11 +123,14 @@ newly assigned parents.
 | Vertex removed | Queue afterward | New parent assignments |
 |---|---|---|
 | 0 | `[1, 2]` | `parent[1] = 0`, `parent[2] = 0` |
-| 1 | TODO | TODO |
-| 2 | TODO | TODO |
-| 3 | TODO | TODO |
+| 1 | [2, 3, 4] | parent[3] = 1, parent[4] = 1 |
+| 2 | [3, 4] | none |
+| 3 | [4]| none |
 
 Why does processing `2` leave `parent[4]` unchanged? Answer in one sentence.
+
+vertex 4 was already discovered while processing vertex 1, so BFS does not revisit it or change
+its parent 
 
 ### 2.2 Implementation
 
@@ -225,9 +228,9 @@ vertex `5`.
 | Vertex | Parent | Discovery time | Finishing time |
 |---|---|---|---|
 | 0 | `None` | 1 | 10 |
-| 3 | TODO | TODO | TODO |
-| 4 | TODO | TODO | TODO |
-| 5 | TODO | TODO | TODO |
+| 3 | 1 | 3 | 8 |
+| 4 | 3 | 4 | 7 |
+| 5 | none | 11 | 12 |
 
 ### 3.2 Implementation
 
@@ -248,12 +251,23 @@ a vertex's neighbors requires scanning its entire row.
 
 | Cost | Adjacency list | Adjacency matrix |
 |---|---|---|
-| Store the graph | TODO | TODO |
-| Run BFS | TODO | TODO |
-| Run DFS | TODO | TODO |
+| Store the graph | O(V + E) | O(V^2) |
+| Run BFS | O(V + E) | O(V^2) |
+| Run DFS | O(V + E) | O(V^2) |
 
 In a few sentences, explain how many neighbor entries each traversal checks
 with each representation. Why does a sparse graph benefit from adjacency lists?
+
+with an adjacency list, BFS and DFS check each vertex's neighbor entries. In an undirected graph,
+each edge appears twice in the adjacency lists, so the traversals examine 2E adjacency entries,
+in addition to visiting V vertices. The time gives a complexity of O(V + E)
+
+With an adjacency matrix, each vertex's entire row of V entries must be scanned to find its neighbors.
+Since BFS and DFS visit all v vertices in a connected graph, they examine V^2 matrix entries,
+resulting in O(V^2) time complexity.
+
+sparse graphs benefit from adjacency lists because they have relatively few edges compared to the 
+number of possible edges. Adjacency lists use less memory and allow traversals to avoid checking non-existent edges. 
 
 ---
 

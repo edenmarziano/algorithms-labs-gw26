@@ -28,9 +28,9 @@ pseudocode, and practice traces. The current sections cover:
 | `string_search.py` | Fill in the four implementation TODOs |
 | `lab_checks.py` | Provided automated checks; do not edit |
 
-- [ ] Part 1: Trace and implement naive search.
-- [ ] Part 2: Trace, implement, and analyze Rabin–Karp.
-- [ ] Part 3: Trace the prefix table and matcher, implement KMP, and analyze its running time.
+- [X] Part 1: Trace and implement naive search.
+- [X] Part 2: Trace, implement, and analyze Rabin–Karp.
+- [X] Part 3: Trace the prefix table and matcher, implement KMP, and analyze its running time.
 
 ### Shared conventions
 
