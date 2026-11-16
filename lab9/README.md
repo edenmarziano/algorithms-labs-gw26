@@ -21,8 +21,8 @@ cost. We will build on the queues and DFS ideas from Lab 8.
 | `graph_algorithms.py` | Complete the four implementation TODOs |
 | `lab_checks.py` | Provided automated checks; do not edit |
 
-- [ ] Part 1: Trace and implement topological sorting.
-- [ ] Part 2: Implement union-find and Kruskal, then trace their decisions.
+- [X] Part 1: Trace and implement topological sorting.
+- [X] Part 2: Implement union-find and Kruskal, then trace their decisions.
 
 Vertices in the code are numbered `0` through `n - 1`. In the lecture
 examples, `A, B, C, D, E` correspond to `0, 1, 2, 3, 4`.
@@ -89,11 +89,16 @@ order, are `[0, 1, 1, 2, 1]`. Visit neighbors in the order shown.
 | Vertex removed | Queue afterward | In-degree of `D` |
 |---|---|---|
 | A | `[B, C]` | 2 |
-| B | TODO | TODO |
-| C | TODO | TODO |
+| B | [C] | 1 |
+| C | [D] | 0 |
+| D | [E] | 0 |
+| E | [] | 0 |
 
 Now add the edge `E -> B`. Which vertices reach the output before the
 algorithm stops? What does the function return?
+
+It creates a cycle, the algorithm processes A and C before the queue becomes empty.
+D and E are blocked by the cycle. A,C reach the output. The return value is none 
 
 ### 1.2 Implementation
 
@@ -131,6 +136,8 @@ processed before that vertex, so one pass over the edges is enough.
 **TODO 1.3:** Give the time and extra-space bounds for Kahn's algorithm in
 terms of `V` vertices and `E` edges, excluding storage for the input graph.
 Briefly explain how often each vertex enters the queue and each edge is checked.
+
+Kahn's algorithm has a time complexity of O(V + E) and an extra-space complexity of O(V), excluding the input graph. Each vertex enters and leaves the queue at most once, resulting in O(V) queue operations. Each directed edge is checked exactly once when its source vertex is removed from the queue, resulting in O(E) edge processing. The overall time complexity is O(V + E).
 
 ---
 
@@ -248,12 +255,22 @@ calls, then decide whether the edge is accepted.
 
 | Edge | Roots | Accept? | Total weight |
 |---|---|---|---|
-| `(B, D): 4` | TODO | TODO | TODO |
-| `(A, C): 5` | TODO | TODO | TODO |
-| `(D, E): 6` | TODO | TODO | TODO |
+| `(B, D): 4` | A,A | No | 6 |
+| `(A, C): 5` | A,A | No | 6 |
+| `(D, E): 6` | A,E | Yes | 12 |
 
 After checking `(B, D)`, what is `parent[D]`? Explain why a rejected edge
 can still change the parent array. Does Kruskal examine `(C, E): 7`?
+
+parent[D] = A
+
+Although (B, D) is rejected because both endpoints belong to the same component, the find(D) operation performs path compression. It updates D's parent directly to the component root A.
+
+No it does not examine (C, E)
+ After accepting (D, E): 6, the algorithm has accepted four edges for five vertices
+
+Since a spanning tree requires n - 1 = 4 edges, Kruskal stops
+
 
 ### 2.3 Analysis
 
@@ -261,6 +278,10 @@ can still change the parent array. Does Kruskal examine `(C, E): 7`?
 including initialization and sorting. You may use the lecture's amortized
 bound of `O(α(V))` per union-find operation, where `α` grows extremely slowly.
 Which step dominates? What changes if the edges are already sorted?
+
+Kruskal's algorithm has a total time complexity of O(V + E log E + E α(V)), including initialization, sorting, and union-find operations. The sorting step, O(E log E), dominates the total complexity. Union-find operations take O(E α(V)) amortized time, where α(V) is the inverse Ackermann function.
+
+If the edges are already sorted, the sorting step is eliminated. The total time complexity becomes O(V + E α(V)), since initialization takes O(V) time and processing the edges takes O(E α(V)) time.
 
 ---
 
